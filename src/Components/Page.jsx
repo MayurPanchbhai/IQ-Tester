@@ -4,7 +4,23 @@ import { MyQuestions, Questions } from "../MyContextData";
 export const Page = () =>{
 
     const [selectedOption, setSelectedOption] = useState(null);
-    const { counter,updateCounter,score,updateScore ,age ,quiz } = useContext(Questions);
+    const { counter,updateCounter,score,updateScore,handleRestart,handleSumbit ,age,finalScore ,quiz,showResult , setShowResult } = useContext(Questions);
+    
+    
+
+    function getResultMessage(score) {
+        if (score >= 90) {
+            return "Excellent! You're a pro at this. Keep up the great work! 🎉";
+        } else if (score >= 75) {
+            return "Great job! You're doing really well. Just a little more practice to hit perfection! 💪";
+        } else if (score >= 50) {
+            return "Good effort! Keep practicing, and you'll get there soon. Don't give up! 😊";
+        } else if (score >= 25) {
+            return "You're getting there! Review your mistakes and try again for a better score. 🚀";
+        } else {
+            return "Keep trying! Every mistake is a step closer to improvement. You've got this! 🌟";
+        }
+    }
 
     const handleAnswerCheck = () =>{
         if(selectedOption != null && quiz[counter].correctAnswer.toString() == selectedOption.toString()){
@@ -20,12 +36,22 @@ export const Page = () =>{
         setSelectedOption(null);
         
     }
+
+    
     
 
 
     return(
-        <div className="bg-black shadows-into-light-regular flex items-center justify-center text-white h-[100vh] w-[100vw] " > 
-            <div className="w-9/12 h-max border-4 rounded-xl gap-1 px-4 py-7  flex flex-col items-center justify-around ">
+        <div className={`relative bg-black shadows-into-light-regular flex items-center justify-center text-white h-[100vh] w-[100vw] `}>
+            <div className={`${showResult?"flex":"hidden"} absolute bg-black w-4/6 h-[48%] border-4 border-blue-600 rounded-md p-3  flex-col items-center justify-around `}>
+                <h1 className="text-center ">{getResultMessage(score)}</h1>
+                <hr className="border-2  border-blue-600 w-[100%]" />
+                <h2 >You Scored : {finalScore} : {Math.round((score/quiz.length)*100)}</h2>
+                <hr className="border-2  border-blue-600 w-[100%]" />
+                <button onClick={handleRestart}  className={`p-2 rounded-lg bg-white text-blue-500`}>Restart</button>
+
+            </div>
+            <div className="w-9/12 h-max border-4 rounded-xl gap-1 px-4 py-7  flex flex-col items-center justify-around " >
                 <Content selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
             <div className="w-full flex justify-around pt-3">
                 <button
@@ -35,7 +61,7 @@ export const Page = () =>{
                 >
                     Next
                 </button>
-                <button onClick={handleAnswerCheck} className="bg-blue-500 p-2 rounded-lg">{`${counter<(quiz.length-1)?"Skip":"Submit"} `}</button>
+                <button onClick={counter < (quiz.length-1) ? handleAnswerCheck: handleSumbit} className="bg-blue-500 p-2 rounded-lg">{`${counter<(quiz.length-1)?"Skip":"Submit"} `}</button>
             </div>
             </div>
         </ div>

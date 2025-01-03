@@ -5,9 +5,27 @@ export const Questions = createContext("");
 
 
 export const MyQuestions =({children})=> {
-    const [counter , setConter] = useState(0);
-    const age=8;
-    const [score , setScore] = useState(0);
+
+  let finalScore = 0;
+  const [counter , setConter] = useState(0);
+  let [score , setScore] = useState(0);
+  const [showResult , setShowResult] =useState(false);
+  //resetting all fields
+  
+  const handleRestart = () =>{
+    setConter(0);
+    finalScore = 0;
+    setShowResult(false);
+    setScore(0)
+  }
+
+  const handleSumbit = () =>{
+    finalScore = score;
+    console.log(finalScore);
+    console.log(score);
+    
+    setShowResult(true);
+}
 
     function updateCounter(){
       if(counter < quiz.length-1){
@@ -129,7 +147,7 @@ export const MyQuestions =({children})=> {
         },
       ];
     return (
-        <Questions.Provider value={{counter,updateCounter,score,updateScore , age , quiz}}>
+        <Questions.Provider value={{counter,updateCounter,score,updateScore ,finalScore , handleRestart, quiz,handleSumbit,showResult , setShowResult}}>
             {children}
         </Questions.Provider>
     )
