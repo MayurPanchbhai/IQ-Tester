@@ -14,6 +14,7 @@ export const Page = () =>{
         if(counter == quiz.length-1){
             console.log("Your score is ", score);
             
+            
         }
         updateCounter();
         setSelectedOption(null);
