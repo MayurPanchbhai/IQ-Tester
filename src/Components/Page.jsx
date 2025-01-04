@@ -3,12 +3,14 @@ import { MyQuestions, Questions } from "../MyContextData";
 
 export const Page = () =>{
 
-    const [selectedOption, setSelectedOption] = useState(null);
-    const { counter,updateCounter,score,updateScore,handleRestart,handleSumbit ,age,finalScore ,quiz,showResult , setShowResult } = useContext(Questions);
+    
+    const { counter,updateCounter,score,updateScore,handleRestart,handleSumbit,handleSkip ,handleAnswerCheck ,age,finalScore ,quiz,showResult , setShowResult ,selectedOption, setSelectedOption} = useContext(Questions);
     
     
 
     function getResultMessage(score) {
+        score= Math.round((score/quiz.length)*100);
+
         if (score >= 90) {
             return "Excellent! You're a pro at this. Keep up the great work! 🎉";
         } else if (score >= 75) {
@@ -22,31 +24,13 @@ export const Page = () =>{
         }
     }
 
-    const handleAnswerCheck = () =>{
-        if(selectedOption != null && quiz[counter].correctAnswer.toString() == selectedOption.toString()){
-            updateScore();
-            console.log("updated" ,score);    
-        }
-        if(counter == quiz.length-1){
-            console.log("Your score is ", score);
-            
-            
-        }
-        updateCounter();
-        setSelectedOption(null);
-        
-    }
-
-    
-    
-
 
     return(
         <div className={`relative bg-black shadows-into-light-regular flex items-center justify-center text-white h-[100vh] w-[100vw] `}>
             <div className={`${showResult?"flex":"hidden"} absolute bg-black w-4/6 h-[48%] border-4 border-blue-600 rounded-md p-3  flex-col items-center justify-around `}>
                 <h1 className="text-center ">{getResultMessage(score)}</h1>
                 <hr className="border-2  border-blue-600 w-[100%]" />
-                <h2 >You Scored : {finalScore} : {Math.round((score/quiz.length)*100)}</h2>
+                <h2 >You Have : {finalScore} IQ</h2>
                 <hr className="border-2  border-blue-600 w-[100%]" />
                 <button onClick={handleRestart}  className={`p-2 rounded-lg bg-white text-blue-500`}>Restart</button>
 
@@ -61,7 +45,7 @@ export const Page = () =>{
                 >
                     Next
                 </button>
-                <button onClick={counter < (quiz.length-1) ? handleAnswerCheck: handleSumbit} className="bg-blue-500 p-2 rounded-lg">{`${counter<(quiz.length-1)?"Skip":"Submit"} `}</button>
+                <button onClick={counter < (quiz.length-1) ? handleSkip: handleSumbit} className="bg-blue-500 p-2 rounded-lg">{`${counter<(quiz.length-1)?"Skip":"Submit"} `}</button>
             </div>
             </div>
         </ div>
@@ -81,12 +65,7 @@ const Content = ({selectedOption, setSelectedOption}) =>{
             setSelectedOption(event.target.value);  
             
     };
-
-    // useEffect(() => {
-    //     // This will run every time selectedOption changes
-    //     console.log("Selected option changed:", selectedOption);
-        
-    // }, [selectedOption]);   
+   
     
     return (
         <>

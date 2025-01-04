@@ -6,38 +6,63 @@ export const Questions = createContext("");
 
 export const MyQuestions =({children})=> {
 
-  let finalScore = 0;
+  let [finalScore,setFinalScore] = useState(0);
   const [counter , setConter] = useState(0);
-  let [score , setScore] = useState(0);
+  let [score , setScore] = useState(1);
   const [showResult , setShowResult] =useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  // skipp 
+  const handleSkip = () =>{
+    setConter(counter+1);
+  }
+
+
   //resetting all fields
   
+
   const handleRestart = () =>{
     setConter(0);
-    finalScore = 0;
+    setFinalScore(0);
     setShowResult(false);
     setScore(0)
   }
 
+  
+  function updateCounter(){
+    if(counter < quiz.length-1){
+      setConter(counter+1);
+    }
+    
+  }
+  
+  function updateScore(){
+    setScore(score+1);
+  }
+  
   const handleSumbit = () =>{
-    finalScore = score;
-    console.log(finalScore);
-    console.log(score);
+    setFinalScore(Math.round((score/quiz.length)*220));
     
     setShowResult(true);
 }
 
-    function updateCounter(){
-      if(counter < quiz.length-1){
-        setConter(counter+1);
-      }
-      
-    }
 
-    function updateScore(){
-      setScore(score+1);
-    }
-
+const handleAnswerCheck = () =>{
+  if(selectedOption == null){ 
+    alert("Please select the answer")
+    return
+  }
+  if(selectedOption != null && quiz[counter].correctAnswer.toString() == selectedOption.toString()){
+    
+    updateScore();  
+  }
+  if(counter == quiz.length-1){
+    handleSumbit();
+  }
+  updateCounter();
+  setSelectedOption(null);
+  
+}
 
     const quiz = [
         {
@@ -46,8 +71,8 @@ export const MyQuestions =({children})=> {
           correctAnswer: 32
         },
         {
-          question: "Which number is the odd one out: 5, 9, 11, 15, 17",
-          options: [5, 9, 11, 17],
+          question: "Which number is the odd one out: 7, 9, 11, 15, 17",
+          options: [7, 9, 15, 17],
           correctAnswer: 15
         },
         {
@@ -147,7 +172,7 @@ export const MyQuestions =({children})=> {
         },
       ];
     return (
-        <Questions.Provider value={{counter,updateCounter,score,updateScore ,finalScore , handleRestart, quiz,handleSumbit,showResult , setShowResult}}>
+        <Questions.Provider value={{counter,updateCounter,handleAnswerCheck,score,handleSkip,updateScore ,finalScore , handleRestart, quiz,handleSumbit,showResult , setShowResult,selectedOption, setSelectedOption}}>
             {children}
         </Questions.Provider>
     )
